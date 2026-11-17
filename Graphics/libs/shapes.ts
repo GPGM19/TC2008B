@@ -96,18 +96,82 @@ function smiley(radius: number) : twgl.Arrays {
     // using the radius and an angle. Then convert them to polar coordinates.
 
     // Sample data for a single yellow triangle. Replace with your values.
-    positionData.push(0, 100);
-    positionData.push(-120, -100);
-    positionData.push(120, -100);
-    colorData.push(0.9, 0.8, 0, 1);
-    colorData.push(0.9, 0.8, 0, 1);
-    colorData.push(0.9, 0.8, 0, 1);
+    positionData.push(0);
+    positionData.push(0);
+    colorData.push(1);
+    colorData.push(1);
+    colorData.push(1);
+    colorData.push(1);
 
-    indexData.push(0, 2, 1);
+    let sides = 30;
+    let curr_index = 0;
+    const angleStep = 2 * Math.PI / sides;
+
+    // Loop over the sides to create the rest of the vertices
+    for (let s = 0; s < sides; s++) {
+        const angle = angleStep * s;
+
+        // Generate the coordinates of the vertex
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        positionData.push(x);
+        positionData.push(y);
+
+        // Generate a random color for the vertex
+        colorData.push(1);
+        colorData.push(1);
+        colorData.push(0);
+        colorData.push(1);
+
+        // Define the triangles, in counter clockwise order
+        indexData.push(0);
+        indexData.push(s + 1);
+        indexData.push(((s + 2) <= sides) ? (s + 2) : 1);
+        curr_index += 1;
+    }
+
+    curr_index += 1;
+    positionData.push(-0.75 * radius, 0.5 * radius);   
+    positionData.push(-0.4 * radius, 0.2 * radius);  
+    positionData.push(-0.2 * radius, 0.5 * radius);   
 
 
+    positionData.push(0.2 * radius, 0.5 * radius);    
+    positionData.push(0.4 * radius, 0.2 * radius);   
+    positionData.push(0.75 * radius, 0.5 * radius);    
+
+    for (let i = 0; i < 6; i++) {
+        colorData.push(1, 1, 1, 1);
+    }
+
+    indexData.push(curr_index, curr_index + 1, curr_index + 2);
+    indexData.push(curr_index + 3, curr_index + 4, curr_index + 5);
+
+    positionData.push(-0.50 * radius, 0.3667 * radius);  // pupilBase
+    positionData.push(-0.30 * radius, 0.3667 * radius);  // pupilBase + 1
+    positionData.push(-0.40 * radius, 0.4667 * radius);  // pupilBase + 2 (tip)
+
+    positionData.push(0.50 * radius, 0.3667 * radius);   // pupilBase + 3
+    positionData.push(0.30 * radius, 0.3667 * radius);   // pupilBase + 4
+    positionData.push(0.40 * radius, 0.4667 * radius);   // pupilBase + 5 (tip)
+
+    for (let i = 0; i < 6; i++) {
+        colorData.push(0, 0, 0, 1);
+    }
 
 
+    indexData.push(curr_index + 6, curr_index + 7, curr_index + 8);
+    indexData.push(curr_index + 9, curr_index + 10, curr_index + 11);
+
+    positionData.push(-0.75 * radius, -0.2 * radius);   
+    positionData.push( 0, -0.5 * radius);  
+    positionData.push( 0.75 * radius, -0.2 * radius); 
+
+    for (let i = 0; i < 3; i++) {
+        colorData.push(1, 0, 0, 1);
+    }
+
+    indexData.push(curr_index + 12, curr_index + 13, curr_index + 14);
 
     // Build the final object with the arrays for positions, colors, and indices
     const arrays: twgl.Arrays = {

@@ -32,6 +32,7 @@ class RotationScene extends Scene {
             [ Math.random(), Math.random(), Math.random(), 1 ]);
         model.transforms.t.x = gl.canvas.width / 2;
         model.transforms.t.y = gl.canvas.height / 2;
+        model.transforms.rr.z = 0;
 
         const pivot = this.addObject('pivot', diamond(30),
             [ 0.6, 0.6, 0.6, 1]);
@@ -59,15 +60,20 @@ class RotationScene extends Scene {
         // Transform matrices for the model
         // TODO: Create the matrices necessary
 
-
+        let translateMatrix = M3.translation(v2_trans);
+        let rotateMatrix = M3.rotation(model.transforms.rr.z);
+        let scaleMatrix = M3.scale(v2_scale);
+        let pivotTranslateMatrix = M3.translation(v2_pivot_to_center);
+        let pivotBackTranslateMatrix = M3.translation(v2_center_to_pivot);
 
         // Create a composite transform matrix
         let modelTransforms: Mat3 = M3.identity();
         // TODO: Multiply the matrices in the correct order to obtain the required results
-
-
-
-
+        modelTransforms = M3.multiply(scaleMatrix, modelTransforms);
+        modelTransforms = M3.multiply(translateMatrix, modelTransforms);
+        modelTransforms = M3.multiply(pivotTranslateMatrix, modelTransforms);
+        modelTransforms = M3.multiply(rotateMatrix, modelTransforms);
+        modelTransforms = M3.multiply(pivotBackTranslateMatrix, modelTransforms);
         gl.useProgram(programInfo.program);
 
         let uniforms = {
@@ -129,12 +135,6 @@ class RotationScene extends Scene {
         scaFolder.add(model.transforms.s, 'y', -5, 5)
             .onChange((value: number) => {
                 model.transforms.s.y = value;
-            });
-
-        const colorFolder = modelFolder.addFolder('Color');
-        colorFolder.addColor(model, 'color')
-            .onChange((value: Color) => {
-                model.color = value;
             });
 
         const pivotFolder = gui.addFolder('Pivot');
